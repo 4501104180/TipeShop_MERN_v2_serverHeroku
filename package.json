@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "APIs for Tipe Shop",
   "main": "index.js",
+  "engines": {
+    "node": "16.13.1"
+  },
   "scripts": {
     "dev": "nodemon src/index",
     "start": "node src/index",
