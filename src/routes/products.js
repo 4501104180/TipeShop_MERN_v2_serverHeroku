@@ -11,6 +11,7 @@ router.patch('/:_id', productsAPI.restore);
 router.put('/:_id', upload(false).array('images', 10), productsAPI.update);
 router.post('/filtered', productsAPI.findFilteredProducts);
 router.post('/', upload(false).array('images', 10), productsAPI.create);
+router.get('/search/:keyword', productsAPI.findByKeyword);
 router.get('/similar/:_id/:number', productsAPI.findSimilarProducts);
 router.get('/ranking/:type/:page/:number', productsAPI.findRankingProducts);
 router.get('/:page/:number', productsAPI.findAllWithPagination);

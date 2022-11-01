@@ -6,6 +6,7 @@ const AttributeValue = require('../models/AttributeValue');
 // utils
 const cloudinaryUpload = require('../../utils/cloudinaryUpload');
 const Category = require('../models/Category');
+const { Name } = require('selenium-webdriver/lib/command');
 
 class ProductsAPI {
 	// [GET] /products
@@ -134,7 +135,38 @@ class ProductsAPI {
 			next({ status: 500, msg: error.message });
 		}
 	}
-
+	// [GET] /products/search/:keyword
+	/*
+		keyword: string
+	*/
+	async findByKeyword(req, res, next) {
+		try {
+			let { keyword } = req.params;
+			const slug = keyword
+				// Chuyển hết sang chữ thường
+				.toLowerCase()
+				// chuyển chuỗi sang unicode tổ hợp
+				.normalize('NFD')
+				// xóa các ký tự dấu sau khi tách tổ hợp
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/[đĐ]/g, 'd')
+				// Xóa ký tự đặc biệt
+				.replace(/([^0-9a-z-\s])/g, '')
+				// Xóa khoảng trắng thay bằng ký tự -
+				.replace(/(\s+)/g, '-')
+				// Xóa ký tự - liên tiếp
+				.replace(/-+/g, '-')
+				// xóa phần dư - ở đầu & cuối
+				.replace(/^-+|-+$/g, '');
+			const data = await Product.find({
+				$or: [{ slug: { $regex: slug }, inventory_status: 'availabel' }],
+			});
+			res.status(200).json({ data: data });
+		} catch (error) {
+			console.error(error);
+			next({ status: 500, msg: error.message });
+		}
+	}
 	// [POST] /products/filtered
 	/*
 		categoryIds: [Number],
