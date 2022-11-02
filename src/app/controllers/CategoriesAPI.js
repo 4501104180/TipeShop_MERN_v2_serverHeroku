@@ -289,8 +289,23 @@ class CategoriesAPI {
 		try {
 			let { _id } = req.params;
 			const { image, banners } = req.files;
-			const { name, ...body } = req.body;
-
+			const { name, slug, ...body } = req.body;
+			const convertSlug = name
+				// Chuyển hết sang chữ thường
+				.toLowerCase()
+				// chuyển chuỗi sang unicode tổ hợp
+				.normalize('NFD')
+				// xóa các ký tự dấu sau khi tách tổ hợp
+				.replace(/[\u0300-\u036f]/g, '')
+				.replace(/[đĐ]/g, 'd')
+				// Xóa ký tự đặc biệt
+				.replace(/([^0-9a-z-\s])/g, '')
+				// Xóa khoảng trắng thay bằng ký tự -
+				.replace(/(\s+)/g, '-')
+				// Xóa ký tự - liên tiếp
+				.replace(/-+/g, '-')
+				// xóa phần dư - ở đầu & cuối
+				.replace(/^-+|-+$/g, '');
 			let stringUrl = '';
 			if (image) {
 				const { public_id } = await cloudinaryUpload(image[0].path, 'category');
@@ -314,7 +329,7 @@ class CategoriesAPI {
 			}
 			const category = await Category.findByIdAndUpdate(
 				_id,
-				{ name, image: stringUrl, banners: bannerObjs, ...body },
+				{ name, image: stringUrl, banners: bannerObjs, slug: convertSlug, ...body },
 				{ new: true }
 			);
 			res.status(201).json({

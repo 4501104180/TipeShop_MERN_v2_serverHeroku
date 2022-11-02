@@ -17,6 +17,7 @@ const Product = new Schema(
 		discount_rate: { type: Number, min: 0, max: 100, default: 0 },
 		original_price: { type: Number, min: 0, default: 0 },
 		price: { type: Number, min: 0, default: 0 },
+		youtube_url: { type: String, default: '' },
 		description: { type: String, default: '' },
 		quantity_sold: {
 			text: { type: String, default: '0 Sold' },

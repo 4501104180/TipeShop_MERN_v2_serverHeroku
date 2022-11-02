@@ -10,6 +10,7 @@ const paymentRouter = require('./payment');
 const operationsRouter = require('./operations');
 const resourcesRouter = require('./resources');
 const rolesRouter = require('./roles');
+const attributevaluesRouter = require('./attributevalues');
 const warrantiesRouter = require('./warranties');
 const specificationsRouter = require('./specifications');
 const dashboardRouter = require('./dashboard');
@@ -26,6 +27,7 @@ const initialRoutes = (app) => {
 	app.use('/api/operations', operationsRouter);
 	app.use('/api/resources', resourcesRouter);
 	app.use('/api/roles', rolesRouter);
+	app.use('/api/attributevalues', attributevaluesRouter);
 	app.use('/api/warranties', warrantiesRouter);
 	app.use('/api/specifications', specificationsRouter);
 	app.use('/api/dashboard', dashboardRouter);
