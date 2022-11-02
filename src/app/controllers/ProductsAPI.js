@@ -5,8 +5,6 @@ const Product = require('../models/Product');
 const AttributeValue = require('../models/AttributeValue');
 // utils
 const cloudinaryUpload = require('../../utils/cloudinaryUpload');
-// const Category = require('../models/Category');
-// const { Name } = require('selenium-webdriver/lib/command');
 
 class ProductsAPI {
 	// [GET] /products
