@@ -125,7 +125,7 @@ class PaymentAPI {
 		amount: Number,
 		redirectUrl: String,
 	*/
-	vnpayCreate(req, res, next) {
+	async vnpayCreate(req, res, next) {
 		const { _id, phone_number, amount, redirectUrl } = req.body;
 		const { url, terminalCode, secretKey } = paymentConfig.vnpay;
 
@@ -159,6 +159,7 @@ class PaymentAPI {
 		console.log('link configSignature:', configSignature);
 		const payUrl = `${url}?${qs.stringify(configSignature, { encode: false })}`;
 		console.log('link payUrl:', payUrl);
+		const vnpResponse = await axios.get(url);
 		res.status(200).json(payUrl);
 	}
 
