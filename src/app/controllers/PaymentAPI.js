@@ -68,7 +68,8 @@ class PaymentAPI {
 		try {
 			const { signature, resultCode, orderId, message, orderInfo, ...other } = req.body;
 			const { partnerCode, accessKey, secretKey } = paymentConfig.momo;
-
+			console.log('hehe');
+			console.log(req.body);
 			const configHashSignature = sortObjectByAlphabet(
 				{
 					accessKey,
@@ -95,6 +96,7 @@ class PaymentAPI {
 				'payment_method.description': orderInfo,
 			};
 			// payment successfully
+			console.log(resultCode);
 			if (resultCode === 0) {
 				editBody['tracking_infor.status'] = 'processing';
 				editBody['tracking_infor.status_text'] = 'Pending processing';
