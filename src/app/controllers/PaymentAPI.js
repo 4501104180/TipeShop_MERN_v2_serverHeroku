@@ -161,7 +161,12 @@ class PaymentAPI {
 
 	// [GET] /payment/vnpay/ipn
 	async vnpayIPNCallback(req, res, next) {
+		console.log('Trước khi try');
 		try {
+			console.log('req: ', req);
+			console.log('res: ', res);
+			console.log('next: ', next);
+			console.log('Sau khi try');
 			const {
 				vnp_SecureHashType,
 				vnp_SecureHash,
@@ -171,7 +176,7 @@ class PaymentAPI {
 				...other
 			} = req.query;
 			const { secretKey } = paymentConfig.vnpay;
-
+			console.log('link secretKey:', secretKey);
 			const configSignature = sortObjectByAlphabet({
 				vnp_ResponseCode,
 				vnp_TxnRef,
@@ -179,8 +184,9 @@ class PaymentAPI {
 				...other,
 			});
 			const rawSignature = qs.stringify(configSignature, { encode: false });
+			console.log('link rawSignature:', rawSignature);
 			const signature = crypto.createHmac('sha512', secretKey).update(rawSignature).digest('hex');
-
+			console.log('link signature:', signature);
 			// confirm signed signature
 			if (vnp_SecureHash !== signature) {
 				// return required VNPAY format
