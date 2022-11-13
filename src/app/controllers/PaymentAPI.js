@@ -106,7 +106,8 @@ class PaymentAPI {
 			await Order.findOneAndUpdate(
 				{
 					_id,
-					'tracking_infor.status': 'awaiting_payment',
+					// 'tracking_infor.status': 'awaiting_payment',
+					'tracking_infor.status': 'processing',
 				},
 				editBody
 			);
