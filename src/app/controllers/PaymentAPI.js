@@ -68,8 +68,7 @@ class PaymentAPI {
 		try {
 			const { signature, resultCode, orderId, message, orderInfo, ...other } = req.body;
 			const { partnerCode, accessKey, secretKey } = paymentConfig.momo;
-			console.log('hehe');
-			console.log(req.body);
+
 			const configHashSignature = sortObjectByAlphabet(
 				{
 					accessKey,
@@ -96,7 +95,6 @@ class PaymentAPI {
 				'payment_method.description': orderInfo,
 			};
 			// payment successfully
-			console.log(resultCode);
 			if (resultCode === 0) {
 				editBody['tracking_infor.status'] = 'processing';
 				editBody['tracking_infor.status_text'] = 'Pending processing';
@@ -106,8 +104,7 @@ class PaymentAPI {
 			await Order.findOneAndUpdate(
 				{
 					_id,
-					// 'tracking_infor.status': 'awaiting_payment',
-					'tracking_infor.status': 'processing',
+					'tracking_infor.status': 'awaiting_payment',
 				},
 				editBody
 			);
@@ -152,19 +149,24 @@ class PaymentAPI {
 			vnp_TxnRef: `${_id}-${dayjs(Date.now()).format('HHmmss')}`,
 			vnp_Version: '2.1.0',
 		});
-
+		console.log('link 1', redirectUrl);
+		console.log('link 2', configSignature);
 		const rawSignature = qs.stringify(configSignature, { encode: false });
+		console.log('link rawSignature:', rawSignature);
 		const signature = crypto.createHmac('sha512', secretKey).update(rawSignature).digest('hex');
+		console.log('link signature:', signature);
 		configSignature['vnp_SecureHash'] = signature;
-
+		console.log('link configSignature:', configSignature);
 		const payUrl = `${url}?${qs.stringify(configSignature, { encode: false })}`;
-
+		console.log('link payUrl:', payUrl);
 		res.status(200).json(payUrl);
 	}
 
 	// [GET] /payment/vnpay/ipn
 	async vnpayIPNCallback(req, res, next) {
+		console.log('trước khi try');
 		try {
+			console.log('hehe');
 			const {
 				vnp_SecureHashType,
 				vnp_SecureHash,
@@ -181,9 +183,11 @@ class PaymentAPI {
 				vnp_OrderInfo,
 				...other,
 			});
+			console.log('configSignature:', configSignature);
 			const rawSignature = qs.stringify(configSignature, { encode: false });
+			console.log('rawSignature:', rawSignature);
 			const signature = crypto.createHmac('sha512', secretKey).update(rawSignature).digest('hex');
-
+			console.log('signature:', signature);
 			// confirm signed signature
 			if (vnp_SecureHash !== signature) {
 				// return required VNPAY format
