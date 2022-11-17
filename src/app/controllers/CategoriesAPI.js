@@ -9,6 +9,7 @@ class CategoriesAPI {
 		try {
 			const categories = await Category.find({
 				status: 'active',
+				parent_id: null,
 			}).select('_id name image slug');
 			res.status(200).json(categories);
 		} catch (error) {
