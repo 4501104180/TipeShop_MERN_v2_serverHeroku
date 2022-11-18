@@ -11,16 +11,20 @@ class OrdersAPI {
 	// [GET] /orders/all
 	async findAllOrders(req, res, next) {
 		try {
-			const orders = await Order.find().select([
-				'_id',
-				'customer_id',
-				'shipping_address',
-				'payment_method',
-				'items',
-				'price_summary',
-				'tracking_infor',
-				'note',
-			]);
+			const orders = await Order.find()
+				.sort({
+					createdAt: -1,
+				})
+				.select([
+					'_id',
+					'customer_id',
+					'shipping_address',
+					'payment_method',
+					'items',
+					'price_summary',
+					'tracking_infor',
+					'note',
+				]);
 
 			res.status(200).json({
 				data: orders,
@@ -35,7 +39,6 @@ class OrdersAPI {
 		try {
 			let { _id } = req.params;
 			_id = mongoose.Types.ObjectId(_id);
-			console.log(_id);
 			const order = await Order.findOne({
 				_id,
 			});
@@ -91,10 +94,8 @@ class OrdersAPI {
 		try {
 			let customer_id = req.account._id;
 			customer_id = mongoose.Types.ObjectId(customer_id);
-			console.log(customer_id);
 			let { _id } = req.params;
 			_id = mongoose.Types.ObjectId(_id);
-			console.log(_id);
 			const order = await Order.findOne({
 				_id,
 				customer_id,
