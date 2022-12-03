@@ -4,7 +4,7 @@
   "description": "APIs for Tipe Shop",
   "main": "index.js",
   "engines": {
-    "node": "16.13.1"
+    "node": ">=14 <15"
   },
   "scripts": {
     "dev": "nodemon src/index",
